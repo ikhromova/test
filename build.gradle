@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'io.qameta.allure' version '2.8.1'
+}
+
+configurations {
+    testCompile
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+test {
+    useTestNG() {
+        useDefaultListeners = true
+        suites 'src/test/suites/smoke.xml'
+        systemProperty 'token', System.getProperty('token')
+        systemProperty 'url', System.getProperty('url')
+        systemProperty 'github-token', System.getProperty('github-token')
+    }
+}
+
+allure {
+    def allureVersion = '2.13.8'
+    version = allureVersion
+    autoconfigure = true
+    aspectjweaver = true
+    aspectjVersion = '1.9.7'
+    allureJavaVersion = '2.13.8'
+    resultsDir = file('../allure-results')
+    useTestNG {
+        version = allureVersion
+    }
+}
+
+dependencies {
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.7'
+    implementation 'org.testng:testng:7.4.0'
+    implementation 'com.codeborne:selenide:5.22.2'
+    implementation 'io.qameta.allure:allure-selenide:2.13.8'
+    implementation 'io.qameta.allure:allure-java-commons:2.13.8'
+    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+    implementation 'io.rest-assured:rest-assured:4.4.0'
+}
+
